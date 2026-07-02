@@ -258,9 +258,9 @@ As hipóteses analíticas são construídas a partir da combinação do fato com
 
 Clique no link e, em seguida, em **"Download"** ou **"View raw"**:
 
-- **Acesse a Validação das Hipóteses Analíticas:** [https://drive.google.com/file/d/10EKrilUdsysmf_C4AMcAFq6yzfsHMZhD/view?usp=drive_link](https://drive.google.com/file/d/10EKrilUdsysmf_C4AMcAFq6yzfsHMZhD/view?usp=drive_link)
+- **Acesse a Validação das Hipóteses Analíticas em HTML:** [https://drive.google.com/file/d/10EKrilUdsysmf_C4AMcAFq6yzfsHMZhD/view?usp=drive_link](https://drive.google.com/file/d/10EKrilUdsysmf_C4AMcAFq6yzfsHMZhD/view?usp=drive_link)
 
-- **📥 Baixe a apresentação em PowerPoint:**  
+- **📥 Baixe a apresentação em HTML:**  
   [https://drive.google.com/file/d/1pg_QmDSqtbWCcRpvQGY2Wotb9MAcdIkT/view?usp=sharing](https://drive.google.com/file/d/1pg_QmDSqtbWCcRpvQGY2Wotb9MAcdIkT/view?usp=sharing)
 
 ## Próximos passos
