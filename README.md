@@ -222,11 +222,6 @@ As hipóteses analíticas são construídas a partir da combinação do fato com
 
 # Resultados
 
-**Conclusão:** O melhor segmento da campanha foram os clientes casados, com idade entre 41 e 50 anos, sem filhos em casa e com graduação completa.
-
-O pior segmento de clientes foram os viúvos de todas as faixas etárias, clientes abaixo dos 30 anos de todos os estados civis com 2 ou mais crianças em casa e somente ensino fundamental.
-
-Para maximizar o lucro da próxima campanha, o Marketing precisa direcionar suas ações ao melhor segmento apresentado e reduzir o investimento nos outros segmentos, especialmente o mencionado.
 
 # Visualize a Análise Completa
 
