@@ -54,35 +54,92 @@ O Fato é a coluna de interesse que representa o ponto focal da análise. Nesse 
 
 # Passo 4: Identificação das Dimensões
 
-As colunas foram agrupadas em dimensões comuns que fornecem mais detalhes sobre o Fato que será analisado. Foram organizadas as seguintes dimensões:
-
-- **Cliente**: Salário, Idade, Faixa-Etária, Dias-Cliente, Estado-Civil, Formação, Crianças-Casa, Adolescentes-Casa, Recência.
-- **Produto**: Qtde-Vinhos, Qtde-Frutas, Qtde-Carnes, Qtde-Peixes, Qtde-Doces, Qtde-Premium.
-- **Comportamento de Compra**: Qtde-Compras, Qtde-Compras-Web, Qtde-Compras-Loja, Visitas-Site-Mes.
-- **Comportamento de Mkt**: Reclamações.
+Perfil do cliente
+ColunaO que representaSignificado de negócioIDIdentificador único do clienteChave primária, não tem valor analítico diretoYear_BirthAno de nascimentoPermite calcular idade → segmentação geracional (idade pode explicar preferência de canal, categoria de produto, sensibilidade a desconto)EducationNível educacional (Graduation, PhD, Master, Basic, 2n Cycle)Proxy de classe social/poder aquisitivo → pode correlacionar com ticket médio e categorias consumidasMarital_StatusEstado civilIndica composição familiar → influencia volume e tipo de compra (ex.: casais compram mais)IncomeRenda anual do clienteUm dos principais drivers de gasto e de capacidade de resposta a campanhasKidhome / TeenhomeNº de crianças / adolescentes em casaTamanho e fase do domicílio → afeta mix de produtos e frequência de compra
+📅 Relacionamento com a empresa
+ColunaO que representaSignificado de negócioDt_CustomerData de cadastro do clientePermite calcular "tempo de casa" (tenure) → clientes mais antigos podem ter comportamento de lealdade diferente de novosRecencyDias desde a última compraIndicador clássico de RFM — quanto menor, mais "quente" o cliente está
+💰 Gasto por categoria (últimos ~2 anos)
+ColunaO que representaSignificado de negócioMntWines, MntFruits, MntMeatProducts, MntFishProducts, MntSweetProducts, MntGoldProdsValor gasto em cada categoria de produtoCompõem o "M" (Monetary) do RFM; juntas formam o gasto total do cliente; permitem identificar perfil de consumo (ex.: cliente premium de vinho vs. cliente de produtos "gold"/presente)
+🛒 Canal de compra
+ColunaO que representaSignificado de negócioNumDealsPurchasesNº de compras feitas com desconto/promoçãoSensibilidade a preço/promoçãoNumWebPurchasesNº de compras via sitePreferência por canal digitalNumCatalogPurchasesNº de compras via catálogoCanal mais tradicionalNumStorePurchasesNº de compras em loja físicaPreferência por canal físicoNumWebVisitsMonthVisitas ao site no último mêsEngajamento digital, mesmo sem conversão
+Juntas, essas colunas dão o "F" (Frequency) do RFM e revelam o mix de canais preferido — essencial para decidir por onde direcionar a campanha (e-mail/site vs. catálogo vs. loja).
+📣 Campanhas de marketing
+ColunaO que representaSignificado de negócioAcceptedCmp1 a AcceptedCmp5Se o cliente aceitou (comprou após) cada uma das 5 campanhas anterioresHistórico de responsividade a campanhas — quem responde uma vez tende a responder de novo?ResponseSe aceitou a campanha mais recente (a que está sendo avaliada)Variável-alvo principal para medir sucesso da campanha atualComplainSe reclamou nos últimos 2 anosSinal de insatisfação — pode ser filtro de exclusão ou variável de riscoZ_CostContact / Z_RevenueConstantes (3 e 11 para todos os clientes)Provavelmente custo de contato e receita padrão por resposta usados no dataset original para calcular ROI da campanha; como são constantes, servem apenas de referência fixa, não diferenciam clientes
 
 # Passo 5: Hipóteses Analíticas
 
-**Fato (Medida) + Dimensão (Detalhes) + Comparação**
-
 As hipóteses analíticas são construídas a partir da combinação do fato com as dimensões, usando sempre um valor de comparação como maior, menor ou igual.
 
-- **Fato + Dimensão: Cliente - Atributos: Idade.**
-  - O faturamento dos clientes abaixo de 30 anos é maior do que nas outras faixas etárias.
-  - O faturamento dos clientes entre 20 e 30 anos é maior do que nas outras faixas etárias.
-  - O faturamento dos clientes acima dos 30 anos é maior do que nas outras faixas.
+#### H1 — Clientes que respondem à campanha gastam mais que os que não respondem
 
-- **Fato + Dimensão: Cliente - Atributos: Estado Civil.**
-  - Clientes solteiros gastam mais do que os outros segmentos de clientes.
-  - Clientes solteiros gastam menos do que os outros segmentos de clientes.
-  - Clientes casados gastam mais do que os outros segmentos de clientes.
+**Lógica:** Se a campanha está de fato engajando os clientes certos, o grupo que responde (`Response = 1`) deveria ter um Gasto-Cliente médio maior que o grupo que não responde — isso valida se a campanha está atraindo clientes de alto valor, e não apenas volume de resposta sem faturamento relevante.
 
-- **Fato + Dimensão: Cliente - Atributos: Estado Civil + Idade.**
-  - Clientes solteiros acima dos 30 anos gastam mais do que clientes casados acima dos 30 anos.
+**Como testar:** Comparar a média/mediana de `Gasto-Cliente` entre `Response = 1` e `Response = 0` (boxplot + teste t ou Mann-Whitney, já que gasto costuma ser assimétrico).
 
-- **Fato + Dimensão: Cliente - Atributos: Formação Profissional.**
-  - Clientes com formações avançadas (Doutorado) gastam mais do que clientes com Ensino Fundamental.
-  - Clientes com maiores salários têm nível de escolaridade maior.
+---
+
+#### H2 — Renda mais alta está associada a maior propensão de resposta e maior gasto
+
+**Lógica:** Clientes com `Income` mais alto têm mais poder de compra, logo tendem a gastar mais e podem ser mais propensos a responder a ofertas (ou o oposto — menos sensíveis a desconto, dependendo do tipo de campanha).
+
+**Como testar:** Correlação entre `Income` e `Gasto-Cliente`; comparar distribuição de `Income` entre respondentes e não-respondentes; segmentar `Income` em faixas e calcular taxa de `Response` por faixa.
+
+---
+
+#### H3 — Presença de filhos em casa (Kidhome/Teenhome) reduz a propensão de resposta e o gasto
+
+**Lógica:** Famílias com crianças/adolescentes podem ter orçamento mais restrito ou prioridades de compra diferentes (produtos essenciais vs. categorias como vinho/gold), reduzindo tanto o gasto quanto a resposta a campanhas de categorias não-essenciais.
+
+**Como testar:** Comparar `Gasto-Cliente` e taxa de `Response` entre clientes com `Kidhome+Teenhome = 0` vs. `≥1`; analisar se o efeito é mais forte em categorias específicas (`MntGoldProds`, `MntWines`).
+
+---
+
+#### H4 — Clientes que já responderam a campanhas anteriores têm maior chance de responder novamente
+
+**Lógica:** Responsividade a marketing pode ser um traço comportamental estável — "quem comprou uma vez por causa de campanha, compra de novo" — o que ajudaria a identificar um segmento fiel para targeting.
+
+**Como testar:** Criar uma variável `Total_Campanhas_Aceitas = soma(AcceptedCmp1..5)` e cruzar com `Response` (ex.: taxa de `Response` por número de campanhas aceitas anteriormente; correlação ponto-bisserial).
+
+---
+
+#### H5 — Recency (tempo desde a última compra) está inversamente relacionada à resposta
+
+**Lógica:** Clientes que compraram recentemente estão mais "engajados" e mais propensos a responder a uma nova campanha; clientes inativos há muito tempo tendem a ignorar ofertas.
+
+**Como testar:** Comparar distribuição de `Recency` entre `Response = 1` e `Response = 0`; correlação entre `Recency` e `Response` (point-biserial) ou `Recency` e `Gasto-Cliente`.
+
+---
+
+#### H6 — O canal de compra preferido influencia a resposta à campanha
+
+**Lógica:** Clientes mais digitais (`NumWebPurchases`, `NumWebVisitsMonth` altos) podem responder mais a campanhas veiculadas online, enquanto clientes de loja física podem ser menos sensíveis a esse tipo de estímulo — informação relevante para escolher o canal de divulgação da próxima campanha.
+
+**Como testar:** Criar um indicador de "canal dominante" por cliente (qual canal concentra mais compras) e cruzar com `Response`; comparar médias de `NumWebPurchases`, `NumCatalogPurchases`, `NumStorePurchases` entre respondentes e não-respondentes.
+
+---
+
+#### H7 — Clientes com reclamações (Complain) têm menor propensão a responder
+
+**Lógica:** Insatisfação recente pode reduzir a receptividade a novas ofertas — importante para decidir se esse grupo deve ser excluído ou tratado de forma diferenciada na próxima campanha.
+
+**Como testar:** Comparar taxa de `Response` entre `Complain = 1` e `Complain = 0` (teste qui-quadrado, dado que ambas são binárias).
+
+---
+
+#### H8 — Existe um segmento específico que maximiza receita esperada (propensão × ticket), não necessariamente o de maior taxa de resposta
+
+**Lógica:** Esta é a hipótese "guarda-chuva" ligada à decisão de negócio: o segmento ideal para a próxima campanha não é obrigatoriamente o que mais responde, mas o que gera maior **receita esperada** = P(Response) × Gasto-Cliente médio. Pode haver um segmento com taxa de resposta moderada, mas gasto muito alto, que supera em valor um segmento de alta resposta e baixo ticket.
+
+**Como testar:** Segmentar clientes (por renda, idade, educação, filhos, canal) e calcular, para cada segmento: taxa de resposta × Gasto-Cliente médio; ranquear segmentos por essa receita esperada e comparar com o ranking apenas por taxa de resposta.
+
+---
+
+#### H9 — Sensibilidade a desconto (NumDealsPurchases) está associada a menor gasto médio, mas talvez maior resposta a campanhas promocionais
+
+**Lógica:** Clientes que compram muito na promoção podem ter menor ticket médio individual (só compram quando há desconto), mas podem responder proporcionalmente mais a uma campanha — o que é importante para não confundir "responde muito" com "gera muito faturamento".
+
+**Como testar:** Correlação entre `NumDealsPurchases` e `Gasto-Cliente`; comparar taxa de `Response` e Gasto-Cliente médio entre quartis de `NumDealsPurchases`.
+
 
 # Passo 6: Critérios de Priorização
 
@@ -91,11 +148,75 @@ As hipóteses analíticas são construídas a partir da combinação do fato com
 
 # Passo 7: Priorização das Hipóteses Analíticas
 
-1. **Hipótese 1:** Clientes abaixo dos 30 anos gastam mais com produtos do iFood do que as outras faixas etárias.
-2. **Hipótese 2:** Clientes solteiros gastam menos do que os outros segmentos de clientes.
-3. **Hipótese 3:** Clientes solteiros abaixo dos 30 anos gastam mais com produtos do iFood do que as outras faixas etárias.
-4. **Hipótese 4:** Clientes com crianças em casa compram mais pelo iFood.
-5. **Hipótese 5:** Clientes que compram mais carne também compram mais vinho.
+#### H1 — Clientes que respondem à campanha gastam mais que os que não respondem
+
+**Lógica:** Se a campanha está de fato engajando os clientes certos, o grupo que responde (`Response = 1`) deveria ter um Gasto-Cliente médio maior que o grupo que não responde — isso valida se a campanha está atraindo clientes de alto valor, e não apenas volume de resposta sem faturamento relevante.
+
+**Como testar:** Comparar a média/mediana de `Gasto-Cliente` entre `Response = 1` e `Response = 0` (boxplot + teste t ou Mann-Whitney, já que gasto costuma ser assimétrico).
+
+---
+
+#### H2 — Renda mais alta está associada a maior propensão de resposta e maior gasto
+
+**Lógica:** Clientes com `Income` mais alto têm mais poder de compra, logo tendem a gastar mais e podem ser mais propensos a responder a ofertas (ou o oposto — menos sensíveis a desconto, dependendo do tipo de campanha).
+
+**Como testar:** Correlação entre `Income` e `Gasto-Cliente`; comparar distribuição de `Income` entre respondentes e não-respondentes; segmentar `Income` em faixas e calcular taxa de `Response` por faixa.
+
+---
+
+#### H3 — Presença de filhos em casa (Kidhome/Teenhome) reduz a propensão de resposta e o gasto
+
+**Lógica:** Famílias com crianças/adolescentes podem ter orçamento mais restrito ou prioridades de compra diferentes (produtos essenciais vs. categorias como vinho/gold), reduzindo tanto o gasto quanto a resposta a campanhas de categorias não-essenciais.
+
+**Como testar:** Comparar `Gasto-Cliente` e taxa de `Response` entre clientes com `Kidhome+Teenhome = 0` vs. `≥1`; analisar se o efeito é mais forte em categorias específicas (`MntGoldProds`, `MntWines`).
+
+---
+
+#### H4 — Clientes que já responderam a campanhas anteriores têm maior chance de responder novamente
+
+**Lógica:** Responsividade a marketing pode ser um traço comportamental estável — "quem comprou uma vez por causa de campanha, compra de novo" — o que ajudaria a identificar um segmento fiel para targeting.
+
+**Como testar:** Criar uma variável `Total_Campanhas_Aceitas = soma(AcceptedCmp1..5)` e cruzar com `Response` (ex.: taxa de `Response` por número de campanhas aceitas anteriormente; correlação ponto-bisserial).
+
+---
+
+#### H5 — Recency (tempo desde a última compra) está inversamente relacionada à resposta
+
+**Lógica:** Clientes que compraram recentemente estão mais "engajados" e mais propensos a responder a uma nova campanha; clientes inativos há muito tempo tendem a ignorar ofertas.
+
+**Como testar:** Comparar distribuição de `Recency` entre `Response = 1` e `Response = 0`; correlação entre `Recency` e `Response` (point-biserial) ou `Recency` e `Gasto-Cliente`.
+
+---
+
+#### H6 — O canal de compra preferido influencia a resposta à campanha
+
+**Lógica:** Clientes mais digitais (`NumWebPurchases`, `NumWebVisitsMonth` altos) podem responder mais a campanhas veiculadas online, enquanto clientes de loja física podem ser menos sensíveis a esse tipo de estímulo — informação relevante para escolher o canal de divulgação da próxima campanha.
+
+**Como testar:** Criar um indicador de "canal dominante" por cliente (qual canal concentra mais compras) e cruzar com `Response`; comparar médias de `NumWebPurchases`, `NumCatalogPurchases`, `NumStorePurchases` entre respondentes e não-respondentes.
+
+---
+
+#### H7 — Clientes com reclamações (Complain) têm menor propensão a responder
+
+**Lógica:** Insatisfação recente pode reduzir a receptividade a novas ofertas — importante para decidir se esse grupo deve ser excluído ou tratado de forma diferenciada na próxima campanha.
+
+**Como testar:** Comparar taxa de `Response` entre `Complain = 1` e `Complain = 0` (teste qui-quadrado, dado que ambas são binárias).
+
+---
+
+#### H8 — Existe um segmento específico que maximiza receita esperada (propensão × ticket), não necessariamente o de maior taxa de resposta
+
+**Lógica:** Esta é a hipótese "guarda-chuva" ligada à decisão de negócio: o segmento ideal para a próxima campanha não é obrigatoriamente o que mais responde, mas o que gera maior **receita esperada** = P(Response) × Gasto-Cliente médio. Pode haver um segmento com taxa de resposta moderada, mas gasto muito alto, que supera em valor um segmento de alta resposta e baixo ticket.
+
+**Como testar:** Segmentar clientes (por renda, idade, educação, filhos, canal) e calcular, para cada segmento: taxa de resposta × Gasto-Cliente médio; ranquear segmentos por essa receita esperada e comparar com o ranking apenas por taxa de resposta.
+
+---
+
+#### H9 — Sensibilidade a desconto (NumDealsPurchases) está associada a menor gasto médio, mas talvez maior resposta a campanhas promocionais
+
+**Lógica:** Clientes que compram muito na promoção podem ter menor ticket médio individual (só compram quando há desconto), mas podem responder proporcionalmente mais a uma campanha — o que é importante para não confundir "responde muito" com "gera muito faturamento".
+
+**Como testar:** Correlação entre `NumDealsPurchases` e `Gasto-Cliente`; comparar taxa de `Response` e Gasto-Cliente médio entre quartis de `NumDealsPurchases`.
 
 # Insights da análise
 
