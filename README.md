@@ -1,4 +1,4 @@
-# Análise da Campanha de Marketing do Ifood com LLM
+# Análise da Campanha de Marketing do iFood com LLM
 
 ## Problema de Negócio
 
@@ -14,7 +14,7 @@ O seu desafio é entender os dados, encontrar oportunidades de negócio, gerar i
 
 O objetivo deste case é avaliar suas habilidades analíticas e seu conhecimento de negócio.
 
-## Contexto da Analise que foi Gerado Pela LLM
+## Contexto da Análise que foi Gerada pela LLM
 
 **Quem consome:** Gerente de Marketing.
 
@@ -22,25 +22,25 @@ O objetivo deste case é avaliar suas habilidades analíticas e seu conhecimento
 
 **Decisão a embasar:** Definir o **segmento de clientes-alvo da próxima campanha**, com objetivo de **maximizar o faturamento geral da campanha** (não necessariamente a taxa de resposta, mas o retorno em valor).
 
-Isso muda a forma como vamos olhar os dados: o KPI central não é "% que respondeu", e sim uma combinação de **quem responde E quanto gasta** — o que sugere, mais adiante, comparar `Response` × `Gasto-Cliente` cruzado com perfil demográfico e comportamento de compra, para achar o segmento com melhor relação entre propensão a responder e ticket/gasto.
+Isso muda a forma como vamos olhar os dados: o KPI central não é "% que respondeu", e sim uma combinação de **quem responde E quanto gasta** — o que sugere, mais adiante, comparar `Response` × `Gasto-Cliente` cruzado com perfil demográfico e comportamento de compra, para encontrar o segmento com melhor relação entre propensão a responder e ticket/gasto.
 
-# Premissas da análise
+## Premissas da análise
 
 - Os dados utilizados para a análise são somente da última campanha.
 - Os dados coletados para a análise foram dos últimos 3 meses, durante a campanha.
 - Foram utilizados os dados de 2.205 clientes participantes da última campanha.
 
-# Estratégia da solução
+## Estratégia da solução
 
 O método Fato-Dimensão foi usado para desenvolver a análise de dados da campanha de Marketing.
 
-# Passo 1: Resumir o contexto em uma pergunta aberta
+## Passo 1: Resumir o contexto em uma pergunta aberta
 
 As perguntas abertas são um tipo de demanda muito comum em análise de dados no qual a demanda possui N possíveis soluções e cabe ao analista de dados avaliar as possibilidades e escolher a alternativa com o maior retorno e o menor esforço possível. Para essa análise, foi definida a seguinte pergunta aberta:
 
 **Como foi o resultado da última campanha de Marketing?**
 
-# Passo 2: Transformar pergunta aberta em fechada
+## Passo 2: Transformar pergunta aberta em fechada
 
 As perguntas fechadas são um tipo de demanda muito comum na área de análise de dados. Essa demanda contém todos os detalhes da análise de dados e direciona o analista exatamente para o que precisa ser feito. Geralmente, a pergunta fechada é a escolha de uma solução entre todas as alternativas possíveis, feita por um profissional mais sênior da área.
 
@@ -48,25 +48,58 @@ Para essa análise, foi definida a seguinte pergunta fechada:
 
 **Existe um perfil demográfico (renda, educação, presença de filhos, idade) mais associado a alta resposta e alto gasto?**
 
-# Passo 3: Definição da Coluna Fato
+## Passo 3: Definição da Coluna Fato
 
-O Fato é a coluna de interesse que representa o ponto focal da análise. Nesse caso, a coluna "Gasto-Clientes" representa o faturamento de cada cliente dentro da campanha e será o objetivo da nossa análise, dado que o problema de negócio envolve aumento do faturamento nas próximas campanhas de Marketing.
+O Fato é a coluna de interesse que representa o ponto focal da análise. Nesse caso, a coluna "Gasto-Cliente" representa o faturamento de cada cliente dentro da campanha e será o objetivo da nossa análise, dado que o problema de negócio envolve aumento do faturamento nas próximas campanhas de Marketing.
 
-# Passo 4: Identificação das Dimensões
+## Passo 4: Identificação das Dimensões
 
-Perfil do cliente
-ColunaO que representaSignificado de negócioIDIdentificador único do clienteChave primária, não tem valor analítico diretoYear_BirthAno de nascimentoPermite calcular idade → segmentação geracional (idade pode explicar preferência de canal, categoria de produto, sensibilidade a desconto)EducationNível educacional (Graduation, PhD, Master, Basic, 2n Cycle)Proxy de classe social/poder aquisitivo → pode correlacionar com ticket médio e categorias consumidasMarital_StatusEstado civilIndica composição familiar → influencia volume e tipo de compra (ex.: casais compram mais)IncomeRenda anual do clienteUm dos principais drivers de gasto e de capacidade de resposta a campanhasKidhome / TeenhomeNº de crianças / adolescentes em casaTamanho e fase do domicílio → afeta mix de produtos e frequência de compra
-📅 Relacionamento com a empresa
-ColunaO que representaSignificado de negócioDt_CustomerData de cadastro do clientePermite calcular "tempo de casa" (tenure) → clientes mais antigos podem ter comportamento de lealdade diferente de novosRecencyDias desde a última compraIndicador clássico de RFM — quanto menor, mais "quente" o cliente está
-💰 Gasto por categoria (últimos ~2 anos)
-ColunaO que representaSignificado de negócioMntWines, MntFruits, MntMeatProducts, MntFishProducts, MntSweetProducts, MntGoldProdsValor gasto em cada categoria de produtoCompõem o "M" (Monetary) do RFM; juntas formam o gasto total do cliente; permitem identificar perfil de consumo (ex.: cliente premium de vinho vs. cliente de produtos "gold"/presente)
-🛒 Canal de compra
-ColunaO que representaSignificado de negócioNumDealsPurchasesNº de compras feitas com desconto/promoçãoSensibilidade a preço/promoçãoNumWebPurchasesNº de compras via sitePreferência por canal digitalNumCatalogPurchasesNº de compras via catálogoCanal mais tradicionalNumStorePurchasesNº de compras em loja físicaPreferência por canal físicoNumWebVisitsMonthVisitas ao site no último mêsEngajamento digital, mesmo sem conversão
+### Perfil do cliente
+
+| Coluna | O que representa | Significado de negócio |
+|--------|------------------|------------------------|
+| ID | Identificador único do cliente | Chave primária, não tem valor analítico direto |
+| Year_Birth | Ano de nascimento | Permite calcular idade → segmentação geracional (idade pode explicar preferência de canal, categoria de produto, sensibilidade a desconto) |
+| Education | Nível educacional (Graduation, PhD, Master, Basic, 2n Cycle) | Proxy de classe social/poder aquisitivo → pode correlacionar com ticket médio e categorias consumidas |
+| Marital_Status | Estado civil | Indica composição familiar → influencia volume e tipo de compra (ex.: casais compram mais) |
+| Income | Renda anual do cliente | Um dos principais drivers de gasto e de capacidade de resposta a campanhas |
+| Kidhome / Teenhome | Nº de crianças / adolescentes em casa | Tamanho e fase do domicílio → afeta mix de produtos e frequência de compra |
+
+### 📅 Relacionamento com a empresa
+
+| Coluna | O que representa | Significado de negócio |
+|--------|------------------|------------------------|
+| Dt_Customer | Data de cadastro do cliente | Permite calcular "tempo de casa" (tenure) → clientes mais antigos podem ter comportamento de lealdade diferente de novos |
+| Recency | Dias desde a última compra | Indicador clássico de RFM — quanto menor, mais "quente" o cliente está |
+
+### 💰 Gasto por categoria (últimos ~2 anos)
+
+| Coluna | O que representa | Significado de negócio |
+|--------|------------------|------------------------|
+| MntWines, MntFruits, MntMeatProducts, MntFishProducts, MntSweetProducts, MntGoldProds | Valor gasto em cada categoria de produto | Compõem o "M" (Monetary) do RFM; juntas formam o gasto total do cliente; permitem identificar perfil de consumo (ex.: cliente premium de vinho vs. cliente de produtos "gold"/presente) |
+
+### 🛒 Canal de compra
+
+| Coluna | O que representa | Significado de negócio |
+|--------|------------------|------------------------|
+| NumDealsPurchases | Nº de compras feitas com desconto/promoção | Sensibilidade a preço/promoção |
+| NumWebPurchases | Nº de compras via site | Preferência por canal digital |
+| NumCatalogPurchases | Nº de compras via catálogo | Canal mais tradicional |
+| NumStorePurchases | Nº de compras em loja física | Preferência por canal físico |
+| NumWebVisitsMonth | Visitas ao site no último mês | Engajamento digital, mesmo sem conversão |
+
 Juntas, essas colunas dão o "F" (Frequency) do RFM e revelam o mix de canais preferido — essencial para decidir por onde direcionar a campanha (e-mail/site vs. catálogo vs. loja).
-📣 Campanhas de marketing
-ColunaO que representaSignificado de negócioAcceptedCmp1 a AcceptedCmp5Se o cliente aceitou (comprou após) cada uma das 5 campanhas anterioresHistórico de responsividade a campanhas — quem responde uma vez tende a responder de novo?ResponseSe aceitou a campanha mais recente (a que está sendo avaliada)Variável-alvo principal para medir sucesso da campanha atualComplainSe reclamou nos últimos 2 anosSinal de insatisfação — pode ser filtro de exclusão ou variável de riscoZ_CostContact / Z_RevenueConstantes (3 e 11 para todos os clientes)Provavelmente custo de contato e receita padrão por resposta usados no dataset original para calcular ROI da campanha; como são constantes, servem apenas de referência fixa, não diferenciam clientes
 
-# Passo 5: Hipóteses Analíticas
+### 📣 Campanhas de marketing
+
+| Coluna | O que representa | Significado de negócio |
+|--------|------------------|------------------------|
+| AcceptedCmp1 a AcceptedCmp5 | Se o cliente aceitou (comprou após) cada uma das 5 campanhas anteriores | Histórico de responsividade a campanhas — quem responde uma vez tende a responder de novo? |
+| Response | Se aceitou a campanha mais recente (a que está sendo avaliada) | Variável-alvo principal para medir sucesso da campanha atual |
+| Complain | Se reclamou nos últimos 2 anos | Sinal de insatisfação — pode ser filtro de exclusão ou variável de risco |
+| Z_CostContact / Z_Revenue | Constantes (3 e 11 para todos os clientes) | Provavelmente custo de contato e receita padrão por resposta usados no dataset original para calcular ROI da campanha; como são constantes, servem apenas de referência fixa, não diferenciam clientes |
+
+## Passo 5: Hipóteses Analíticas
 
 As hipóteses analíticas são construídas a partir da combinação do fato com as dimensões, usando sempre um valor de comparação como maior, menor ou igual.
 
@@ -140,13 +173,12 @@ As hipóteses analíticas são construídas a partir da combinação do fato com
 
 **Como testar:** Correlação entre `NumDealsPurchases` e `Gasto-Cliente`; comparar taxa de `Response` e Gasto-Cliente médio entre quartis de `NumDealsPurchases`.
 
-
-# Passo 6: Critérios de Priorização
+## Passo 6: Critérios de Priorização
 
 - **Critério 1:** Dados disponíveis.
 - **Critério 2:** Insights acionáveis.
 
-# Passo 7: Priorização das Hipóteses Analíticas
+## Passo 7: Priorização das Hipóteses Analíticas
 
 #### H1 — Clientes que respondem à campanha gastam mais que os que não respondem
 
@@ -218,19 +250,20 @@ As hipóteses analíticas são construídas a partir da combinação do fato com
 
 **Como testar:** Correlação entre `NumDealsPurchases` e `Gasto-Cliente`; comparar taxa de `Response` e Gasto-Cliente médio entre quartis de `NumDealsPurchases`.
 
-# Insights da análise
+## Insights da análise
 
-# Resultados
+*（Aguardando preenchimento com os resultados das validações）*
 
+## Visualize a Análise Completa
 
-# Visualize a Análise Completa (clique no link e, em seguida, em "Download" ou "View raw"):**
+Clique no link e, em seguida, em **"Download"** ou **"View raw"**:
 
-- **Acesse a Validacao das Hipoteses Analiticas:** [https://drive.google.com/file/d/10EKrilUdsysmf_C4AMcAFq6yzfsHMZhD/view?usp=drive_link](https://drive.google.com/file/d/10EKrilUdsysmf_C4AMcAFq6yzfsHMZhD/view?usp=drive_link)
+- **Acesse a Validação das Hipóteses Analíticas:** [https://drive.google.com/file/d/10EKrilUdsysmf_C4AMcAFq6yzfsHMZhD/view?usp=drive_link](https://drive.google.com/file/d/10EKrilUdsysmf_C4AMcAFq6yzfsHMZhD/view?usp=drive_link)
 
-- **📥 Baixe a apresentação em PowerPoint (clique no link e, em seguida, em "Download" ou "View raw"):**  
+- **📥 Baixe a apresentação em PowerPoint:**  
   [https://drive.google.com/file/d/1pg_QmDSqtbWCcRpvQGY2Wotb9MAcdIkT/view?usp=sharing](https://drive.google.com/file/d/1pg_QmDSqtbWCcRpvQGY2Wotb9MAcdIkT/view?usp=sharing)
 
-# Próximos passos
+## Próximos passos
 
 - Explorar mais características dos clientes.
 - Automatizar a coleta e a análise para acompanhamento.
