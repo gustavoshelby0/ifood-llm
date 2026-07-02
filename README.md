@@ -223,7 +223,7 @@ As hipóteses analíticas são construídas a partir da combinação do fato com
 # Resultados
 
 
-# Visualize a Análise Completa
+# Visualize a Análise Completa (clique no link e, em seguida, em "Download" ou "View raw"):**
 
 - **Acesse a Validacao das Hipoteses Analiticas:** [https://drive.google.com/file/d/10EKrilUdsysmf_C4AMcAFq6yzfsHMZhD/view?usp=drive_link](https://drive.google.com/file/d/10EKrilUdsysmf_C4AMcAFq6yzfsHMZhD/view?usp=drive_link)
 
