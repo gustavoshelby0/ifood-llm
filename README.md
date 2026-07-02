@@ -54,7 +54,7 @@ O Fato é a coluna de interesse que representa o ponto focal da análise. Nesse 
 
 ## Passo 4: Identificação das Dimensões
 
-### Perfil do cliente
+### 🧑 Perfil do cliente
 
 | Coluna | O que representa | Significado de negócio |
 |--------|------------------|------------------------|
