@@ -225,10 +225,10 @@ As hipóteses analíticas são construídas a partir da combinação do fato com
 
 # Visualize a Análise Completa
 
-- **Acesse o relatório no Looker Studio:** [https://lookerstudio.google.com/reporting/9536ef1a-3c05-4347-b335-ae914e3c92d5](https://lookerstudio.google.com/reporting/9536ef1a-3c05-4347-b335-ae914e3c92d5)
+- **Acesse a Validacao das Hipoteses Analiticas:** [https://drive.google.com/file/d/10EKrilUdsysmf_C4AMcAFq6yzfsHMZhD/view?usp=drive_link](https://drive.google.com/file/d/10EKrilUdsysmf_C4AMcAFq6yzfsHMZhD/view?usp=drive_link)
 
 - **📥 Baixe a apresentação em PowerPoint (clique no link e, em seguida, em "Download" ou "View raw"):**  
-  [https://github.com/gustavoshelby0/Ifood-campanha-market/blob/main/Relatorio%20de%20Campanha%20do%20iFood.pptx](https://github.com/gustavoshelby0/Ifood-campanha-market/blob/main/Relatorio%20de%20Campanha%20do%20iFood.pptx)
+  [https://drive.google.com/file/d/1pg_QmDSqtbWCcRpvQGY2Wotb9MAcdIkT/view?usp=sharing](https://drive.google.com/file/d/1pg_QmDSqtbWCcRpvQGY2Wotb9MAcdIkT/view?usp=sharing)
 
 # Próximos passos
 
