@@ -261,7 +261,10 @@ Clique no link e, em seguida, em **"Download"** ou **"View raw"**:
 - **Acesse a Validação das Hipóteses Analíticas em HTML:** [https://drive.google.com/file/d/10EKrilUdsysmf_C4AMcAFq6yzfsHMZhD/view?usp=drive_link](https://drive.google.com/file/d/10EKrilUdsysmf_C4AMcAFq6yzfsHMZhD/view?usp=drive_link)
 
 - **📥 Baixe a apresentação em HTML:**  
-  [https://drive.google.com/file/d/1pg_QmDSqtbWCcRpvQGY2Wotb9MAcdIkT/view?usp=sharing](https://drive.google.com/file/d/1pg_QmDSqtbWCcRpvQGY2Wotb9MAcdIkT/view?usp=sharing)
+[https://drive.google.com/file/d/1pg_QmDSqtbWCcRpvQGY2Wotb9MAcdIkT/view?usp=sharing](https://drive.google.com/file/d/1pg_QmDSqtbWCcRpvQGY2Wotb9MAcdIkT/view?usp=sharing)
+
+- **📥 Baixe a apresentação Execultiva em HTML:**  
+[https://drive.google.com/file/d/15osUjUFA2E2Fvrli8fNbt8m2cDxJjM86/view?usp=sharing](https://drive.google.com/file/d/15osUjUFA2E2Fvrli8fNbt8m2cDxJjM86/view?usp=sharing)
 
 ## Próximos passos
 
